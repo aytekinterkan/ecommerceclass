@@ -4,7 +4,9 @@ import Slider from '../../components/slider/Slider'
 
 const Home = () => {
   return (
-    <div>Slider</div>
+    <div>
+      <Slider/>
+    </div>
   )
 }
 

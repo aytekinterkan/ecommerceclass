@@ -9,7 +9,7 @@ import { auth } from '../../firebase/config'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER, REMOVE_ACTIVE_USER } from '../../redux/slice/authSlice';
-import { ShowOnLogin, ShowOnLogout } from '../hiddenLink/hiddenLink'
+import ShowOnLogin,{  ShowOnLogout } from '../hiddenLink/hiddenLink'
 
 
 const logo=(

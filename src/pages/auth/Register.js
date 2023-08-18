@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from "./auth.module.scss";
 import registerImg from "../../assets/register.png";
 import Card from '../../components/card/Card';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { auth } from '../../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -30,14 +30,14 @@ const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
     const user = userCredential.user;
-    console.log(user);
+    // console.log(user);
     setIsLoading(false);
     toast.success("Registration succsessfull..");
     navigate("/login");
     })
     .catch((error) => {
-      // const errorCode=error.code;
-      // const errorMessage=error.message;
+    const errorCode=error.code;
+    const errorMessage=error.message;
     setIsLoading(false);
     toast.error(error.message);
     });

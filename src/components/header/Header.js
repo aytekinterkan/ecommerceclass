@@ -9,7 +9,8 @@ import { auth } from '../../firebase/config'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER, REMOVE_ACTIVE_USER } from '../../redux/slice/authSlice';
-import ShowOnLogin,{  ShowOnLogout } from '../hiddenLink/hiddenLink'
+import {ShowOnLogin, ShowOnLogout } from '../hiddenLink/hiddenLink'
+import { AdminOnlyLink } from '../adminOnlyRoute/AdminOnlyRoute'
 
 
 const logo=(
@@ -89,9 +90,20 @@ const Header = () => {
             <li className={styles["logo-mobile"]}>
               {logo}
               <FaTimes size={22} color="#fff" onClick={hideMenu}/>
-
-
             </li>
+
+
+            <AdminOnlyLink>
+            <Link to="/admin/home">
+            <li>
+              <button className="--btn --btn-primary">Admin</button>
+            </li>
+            </Link> 
+            </AdminOnlyLink>
+            
+
+
+
             <li>
               <NavLink to="/" className={activeLink}>Home</NavLink>
             </li>

@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux'
 import { selectEmail } from '../../redux/slice/authSlice'
 import { Link } from 'react-router-dom'
 
-const AdminOnlyRoute = ({childeren}) => {
+const AdminOnlyRoute = ({children}) => {
   const userEmail = useSelector(selectEmail)
 
 
-  if(userEmail === "user3@gmail.com"){
-    return childeren
+  if(userEmail === "user1@gmail.com"){
+    return children
   }
 
 
@@ -29,7 +29,7 @@ const AdminOnlyRoute = ({childeren}) => {
 export const AdminOnlyLink = ({children}) => {
   const userEmail = useSelector(selectEmail)
 
-  if(userEmail === "user3@gmail.com"){
+  if(userEmail === "user1@gmail.com"){
     return children
   }
   return null

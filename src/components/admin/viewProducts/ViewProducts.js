@@ -9,40 +9,24 @@ import { Link } from 'react-router-dom'
 import {FaEdit,FaTrashAlt} from "react-icons/fa"
 import { deleteObject, ref } from 'firebase/storage'
 import Notiflix from 'notiflix'
-import { useDispatch } from 'react-redux'
-import { STORE_PRODUCTS } from '../../../redux/slice/productSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { STORE_PRODUCTS, selectProducts } from '../../../redux/slice/productSlice'
+import useFetchCollection from '../../../customHooks/useFetchCollection'
 
 const ViewProducts = () => {
-  const [products,setProducts] = useState([])
-  const [isLoading,setIsLoading] = useState(false)
+
+  const {data,isLoading} = useFetchCollection("products")
+  const products = useSelector(selectProducts)
+
   const dispatch = useDispatch();
 
+  
   useEffect(()=>{
-    getProducts()
-  },[])
+    dispatch(STORE_PRODUCTS({products: data}))
+  },[dispatch,data])
 
-  const getProducts = () => {
-    setIsLoading(true)
-    try {
-      const productsRef = collection(db,"products")
-      const q = query(productsRef, orderBy("createdAt","desc"))
-      onSnapshot(q, (snapshot) => {
-        const allProducts = snapshot.docs.map((doc)=>({
-          id: doc.id,
-          ...doc.data()
 
-        }))
-        setProducts(allProducts)
-        setIsLoading(false)
-        dispatch(STORE_PRODUCTS({products:allProducts}))
 
-    })
-  }
-    catch (error) {
-      setIsLoading(false)
-      toast.error(error.message)
-    }
-  }
   const deleteProduct = async(id,imageURL) => {
     try {
       await deleteDoc(doc(db,"products",id))

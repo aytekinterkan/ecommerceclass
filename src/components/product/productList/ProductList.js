@@ -1,14 +1,30 @@
 //// home sayfasındaki ürünler hakkında gösterim, arama, sıralama yapabildiğiniz kısımla beraber tüm ürün kartlarının sergilendiği yer. ürün kartları (productıtem) adlı komponentde işlenecektir.
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./ProductList.module.scss"
 import {BsFillGridFill} from "react-icons/bs"
 import {FaListAlt} from "react-icons/fa"
 import Search from '../../search/Search'
 import ProductItem from '../productItem/ProductItem'
+import { useDispatch, useSelector } from 'react-redux'
+import { FILTER_BY_SEARCH, SORT_PRODUCTS, selectFilteredProducts } from '../../../redux/slice/filterSlice'
 
 const ProductList = ({products}) => {
+
   const [grid,setGrid] = useState(true)
   const [search,setSearch] = useState("")
+  const [sort,setSort] = useState("latest")
+
+  const filteredProducts = useSelector(selectFilteredProducts)
+  const dispatch=useDispatch();
+
+
+  useEffect(()=>{
+    dispatch(FILTER_BY_SEARCH({products,search}))
+  },[dispatch,products,search])
+
+  useEffect(()=>{
+    dispatch(SORT_PRODUCTS({products,sort}))
+  },[dispatch,products,sort])
 
 
   return (
@@ -18,7 +34,7 @@ const ProductList = ({products}) => {
         <BsFillGridFill size={22} color="orangered" onClick={()=>setGrid(true)}/>
         <FaListAlt size={24} color="#0066d4" onClick={()=>setGrid(false)}/>
         <p>
-            <b>10</b>Products found
+            <b>{filteredProducts.length} </b>Products found
           </p>
 
         </div>
@@ -27,7 +43,7 @@ const ProductList = ({products}) => {
         </div>
         <div className={styles.sort}>
         <label>Sort by:</label>
-        <select name="category">
+        <select name="category" value={sort} onChange={(e)=>setSort(e.target.value)}>
         <option value="latest">Latest</option>
             <option value="lowest-price">Lowest Price</option>
             <option value="highest-price">Highest Price</option>
@@ -46,7 +62,7 @@ const ProductList = ({products}) => {
           <p>No product found.</p>
         ) : (
           <>
-          {products.map((product)=>{
+          {filteredProducts.map((product)=>{
             return (
               <div key={product.id}>
               <ProductItem {...product} grid={grid} product={product}/>

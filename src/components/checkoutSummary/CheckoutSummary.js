@@ -1,15 +1,21 @@
 //// cart sayfasından checkout sayfasına ulaştığımızda sağ tarafta görünen checkout summary componenti. Proceed to checkout yaptığımızda solda tekrar görünür.
 
 import styles from "./CheckoutSummary.module.scss"
-import { useSelector } from 'react-redux'
-import { selectCartItems, selectCartTotalAmount, selectCartTotalQuantity } from '../../redux/slice/cartSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { CALCULATE_SUBTOTAL, selectCartItems, selectCartTotalAmount, selectCartTotalQuantity } from '../../redux/slice/cartSlice'
 import { Link } from 'react-router-dom'
 import Card from '../card/Card'
+import { useEffect } from "react"
 
 const CheckoutSummary = () => {
   const cartItems = useSelector(selectCartItems)
   const cartTotalAmount = useSelector(selectCartTotalAmount)
   const cartTotalQuantity = useSelector(selectCartTotalQuantity)
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    dispatch(CALCULATE_SUBTOTAL())
+  },[])
 
   return (
     <div>
@@ -51,3 +57,20 @@ const CheckoutSummary = () => {
   )
 }
 export default CheckoutSummary
+
+
+// https://stripe.com/
+
+// https://stripe.com/docs/stripe-js/react#setup
+
+
+
+
+// https://github.com/mustafaselman/ecommerce_class_backend.git
+
+// https://render.com/
+
+// REACT_APP_STRIPE_PK
+// STRIPE_PRIVATE_KEY
+
+// https://stripe.com/docs/payments/quickstart

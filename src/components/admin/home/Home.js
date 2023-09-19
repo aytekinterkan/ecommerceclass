@@ -9,6 +9,7 @@ import { STORE_PRODUCTS, selectProducts } from '../../../redux/slice/productSlic
 import { CALC_TOTAL_ORDER_AMOUNT, STORE_ORDERS, selectOrderHistory, selectTotalOrderAmount } from '../../../redux/slice/orderSlice'
 import useFetchCollection from '../../../customHooks/useFetchCollection'
 import InfoBox from '../../infoBox/InfoBox'
+import Chart from '../../chart/Chart'
 
 const earningIcon = <AiFillDollarCircle size={30} color="#b624ff"/>
 const productIcon = <BsCart4 size={30} color="#1f93ff"/>
@@ -38,6 +39,9 @@ const Home = () => {
         <InfoBox cardClass={`${styles.card} ${styles.card1}`} title={"Earnings"} count={`$${totalOrderAmount}`} icon={earningIcon}/>
         <InfoBox cardClass={`${styles.card} ${styles.card2}`} title={"Products"} count={products.length} icon={productIcon}/>
         <InfoBox cardClass={`${styles.card} ${styles.card3}`} title={"Orders"} count={orders.length} icon={ordersIcon}/>
+      </div>
+      <div>
+        <Chart/>
       </div>
     </div>
   )

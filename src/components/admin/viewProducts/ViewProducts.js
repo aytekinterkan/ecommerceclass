@@ -12,20 +12,33 @@ import Notiflix from 'notiflix'
 import { useDispatch, useSelector } from 'react-redux'
 import { STORE_PRODUCTS, selectProducts } from '../../../redux/slice/productSlice'
 import useFetchCollection from '../../../customHooks/useFetchCollection'
+import { FILTER_BY_SEARCH, selectFilteredProducts } from '../../../redux/slice/filterSlice'
+import Search from '../../search/Search'
+import Pagination from '../../pagination/Pagination'
 
 const ViewProducts = () => {
 
   const {data,isLoading} = useFetchCollection("products")
   const products = useSelector(selectProducts)
 
+  const [search,setSearch] = useState("")
+  const filteredProducts = useSelector(selectFilteredProducts)
   const dispatch = useDispatch();
 
-  
+  const [currentPage,setCurrentPage] = useState(1)
+  const productsPerPage = 9
+
+  const indexOfLastProduct = currentPage * productsPerPage
+  const indexOfFirstProduct = (currentPage - 1) * productsPerPage
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct,indexOfLastProduct)
+
   useEffect(()=>{
     dispatch(STORE_PRODUCTS({products: data}))
   },[dispatch,data])
-
-
+  
+  useEffect(()=>{
+    dispatch(FILTER_BY_SEARCH({products, search}))
+  },[dispatch,products,search])
 
   const deleteProduct = async(id,imageURL) => {
     try {
@@ -39,7 +52,7 @@ const ViewProducts = () => {
     }
   }
 
-  const confirmDelete=(id,imageURL)=>{
+  const confirmDelete = (id,imageURL) => {
     Notiflix.Confirm.show(
       'Delete Product!!!',
       'You are about to delete this product?',
@@ -49,7 +62,6 @@ const ViewProducts = () => {
         deleteProduct(id,imageURL);
       },
       function cancelCb() {
-        
       },
       {
         width: '320px',
@@ -57,36 +69,34 @@ const ViewProducts = () => {
         titleColor: 'orangered',
         okButtonBackground:'orangered',
         cssAnimationStyle:'zoom'
-        // etc...
       },
     );
-
-
-
-
   }
-
-
-
   return (
     <>
-     {isLoading && <Loader/>}
-     <div className={styles.table}>
-     <h2>All Products</h2>
-     {products.length === 0 ? (<p>No product found</p>) : (
-      <table>
-        <thead>
-          <tr>
+    {isLoading && <Loader/>}
+    <div className={styles.table}>
+      <h2>All Products</h2>
+      <div className={styles.search}>
+        <p>
+          <b>{filteredProducts.length}</b> products found
+        </p>
+        <Search value={search} onChange={(e)=>setSearch(e.target.value)}/>
+      </div>
+      {products.length === 0 ? (<p>No product found</p>) : (
+        <table>
+          <thead>
+            <tr>
               <th>s/n</th>
               <th>Image</th>
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
               <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        {products.map((product,index)=>{
+            </tr>
+          </thead>
+          <tbody>
+            {currentProducts.map((product,index)=>{
               const {id,name,price,imageURL,category} = product
               return(
                 <tr key={id}>
@@ -115,29 +125,16 @@ const ViewProducts = () => {
                 </tr>
               )
             })}
-
-
-        </tbody>
-
-
-
-      </table>
-
-     )}
-
-
-
-
-     </div>
-    
-    
-    
+          </tbody>
+        </table>
+      )}
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} productsPerPage={productsPerPage} totalProducts={filteredProducts.length}/>
+    </div>
     </>
   )
 }
 
 export default ViewProducts
-
 
 
 
